@@ -42,8 +42,8 @@ public class PinpointDrive extends MecanumDrive {
         private final double xOffsetMillimeters = 81.0;
         private final double yOffsetMillimeters = 80;
 
-        public double xOffset = robotConfig.setConfig(17);
-        public double yOffset = robotConfig.setConfig(18);
+        public double xOffset = .375;
+        public double yOffset = -.0675;
 
 
 

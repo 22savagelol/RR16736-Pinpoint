@@ -11,18 +11,21 @@ public class Pose {
     //vertical slide
     public static double verticalSlideHighBasket = 788;
     public static double verticalSlideBottom = 0;
+    public static double verticalSlideBar = 210;
     public static double verticalVelocity = 5000;
 
     //vertical tilt
-    public static double verticalTiltTransfer = .06;
-    public static double verticalTiltWall = .42;
-    public static double verticalTiltBasket = .5;
+    public static double verticalTiltTransfer = .27;
+    public static double verticalTiltWall = .52;
+    public static double verticalTiltBasket = .56;
+    public static double verticalTiltBar = .82;
 
     //vertical wrist
     public static double verticalWristTransfer = .71;
     public static double verticalWristHover = .65;
-    public static double verticalWristWall = 0;
-    public static double verticalWristBasket = .15;
+    public static double verticalWristWall = .69;
+    public static double verticalWristBasket = .17;
+    public static double verticalWristBar = .35;
 
     //vertical grabber
     public static double verticalGrabberClose = .41;
@@ -30,14 +33,15 @@ public class Pose {
     public static double verticalGrabberOpen = .66;
 
     //horizontal slide
-    public static double horizontalSlideRetract = .3; // 7.5 inches
+    public static double horizontalSlideRetract = .23;
     public static double horizontalSlideExtend = .7; //17  inches
-    public static double horizontalSlideTransfer = .35;
+    public static double horizontalSlideTransfer = .35;  // 7.5 inches
 
     //horizontal wrist
     public static double horizontalWristIntake = .95;
     public static double horizontalWristHover = .82;
     public static double horizontalWristUp = .54;
+    public static double horizontalWristTuck = .32;
 
 
     //global variable

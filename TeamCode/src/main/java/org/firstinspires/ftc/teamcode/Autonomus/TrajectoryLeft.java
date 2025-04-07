@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.teamcode.Autonomus;
 
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.acmerobotics.roadrunner.VelConstraint;
 
 import org.firstinspires.ftc.teamcode.Config.Attachment.HorizontalIntake;
 import org.firstinspires.ftc.teamcode.Config.Attachment.HorizontalSlide;
@@ -15,6 +20,8 @@ import org.firstinspires.ftc.teamcode.Config.Attachment.VerticalTilt;
 import org.firstinspires.ftc.teamcode.Config.Attachment.VerticalWrist;
 import org.firstinspires.ftc.teamcode.Config.Pose;
 import org.firstinspires.ftc.teamcode.RR.MecanumDrive;
+
+import java.util.Arrays;
 
 public class TrajectoryLeft {
     HorizontalIntake horizontalIntake; HorizontalSlide horizontalSlide; HorizontalWrist horizontalWrist;
@@ -32,9 +39,14 @@ public class TrajectoryLeft {
 
         currentTrajectory = drive.actionBuilder(pose);
     }
+    VelConstraint butterVel = new MinVelConstraint(Arrays.asList(
+            new TranslationalVelConstraint(25),
+            new AngularVelConstraint(Math.PI * .25)
+    ));
+    AccelConstraint butterAcel = new ProfileAccelConstraint(-10.0, 25.0);
     double basket, butter = 0;
     double BX = -56; double BY = -50; double BH = Math.toRadians(220); double BT = Math.toRadians(220);
-    double FBX = -50; double FBY = -40; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(-90);
+    double FBX = -45; double FBY = -40; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(-90);
     double SBX = -55; double SBY = -40; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(-90);
 
     public Action getBasket(){
@@ -44,8 +56,7 @@ public class TrajectoryLeft {
                 .afterTime(0, verticalTilt.verticalTiltAction(Pose.verticalTiltBasket))
                 .afterTime(0, horizontalWrist.horizontalWristAction(Pose.horizontalWristHover))
                 .setTangent(Math.toRadians(45))
-                .splineToLinearHeading(new Pose2d(BX, BY, BH), BT)
-                ;
+                .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
         basket++;
         currentTrajectory = basketTrajectory.fresh();
         return basketTrajectory.build();
@@ -53,14 +64,13 @@ public class TrajectoryLeft {
     public Action getButter(){
         if(butter == 0){
             TrajectoryActionBuilder firstButter = currentTrajectory
-                    .afterTime(.5, verticalSlide.verticalSlideAction(Pose.verticalSlideBottom))
                     .stopAndAdd(verticalGrabber.verticalGrabberAction(Pose.verticalGrabberOpen))
+                    .waitSeconds(.125)
+                    .afterTime(.5, verticalSlide.verticalSlideAction(Pose.verticalSlideBottom))
                     .stopAndAdd(verticalWrist.verticalWristAction(Pose.verticalWristTransfer))
                     .stopAndAdd(verticalTilt.verticalTiltAction(Pose.verticalTiltTransfer))
-
                     .setTangent(Math.toRadians(45))
-                    .strafeToLinearHeading(new Vector2d(FBX, FBY), FBH)
-                    ;
+                    .splineToLinearHeading(new Pose2d(FBX, FBY, FBH), FBT, butterVel, butterAcel);
             butter++;
             currentTrajectory = firstButter.fresh();
             return firstButter.build();
@@ -70,7 +80,6 @@ public class TrajectoryLeft {
                     .stopAndAdd(verticalGrabber.verticalGrabberAction(Pose.verticalGrabberOpen))
                     .stopAndAdd(verticalWrist.verticalWristAction(Pose.verticalWristTransfer))
                     .stopAndAdd(verticalTilt.verticalTiltAction(Pose.verticalTiltTransfer))
-
                     .setTangent(Math.toRadians(45))
                     .splineToLinearHeading(new Pose2d(SBX, SBY, SBH), SBT)
                     ;

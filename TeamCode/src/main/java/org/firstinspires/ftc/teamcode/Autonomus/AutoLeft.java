@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Autonomus;
 
-import androidx.annotation.AnimatorRes;
-
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -30,8 +28,8 @@ public class AutoLeft extends LinearOpMode {
         VerticalTilt verticalTilt = new VerticalTilt(hardwareMap);
         VerticalWrist verticalWrist = new VerticalWrist(hardwareMap);
 
-        Pose2d pose = new Pose2d(-29.5,-62.25,Math.toRadians(180));
-//        Pose2d pose = new Pose2d(0,0,Math.toRadians(90));
+//        Pose2d pose = new Pose2d(-29.5,-62.25,Math.toRadians(180));
+        Pose2d pose = new Pose2d(0,0,Math.toRadians(90));
         PinpointDrive drive = new PinpointDrive(hardwareMap, pose);
 
         TrajectoryLeft trajectory = new TrajectoryLeft(drive, pose, horizontalIntake, horizontalSlide, horizontalWrist,
@@ -43,8 +41,9 @@ public class AutoLeft extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(new SequentialAction(
-                trajectory.getBasket(),
-                trajectory.getButter(),
+//                trajectory.getBasket(),
+//                trajectory.getButter(),
+                trajectory.getSpline(),
                 new SleepAction(2000)
         ));
     }

@@ -32,7 +32,7 @@ public class TeleOpAttachment {
     MecanumDrive drive; Gamepad gamepad1, gamepad2; Gamepad.RumbleEffect singlePulseRumble, longPulseRumble;
     HorizontalIntake horizontalIntake; HorizontalSlide horizontalSlide; HorizontalWrist horizontalWrist;
     VerticalGrabber verticalGrabber; VerticalSlide verticalSlide; VerticalTilt verticalTilt; VerticalWrist verticalWrist;
-    boolean VG, HS = false;
+    boolean VG, HS, VS, VH = false;
     public TeleOpAttachment(MecanumDrive drive, HorizontalIntake horizontalIntake, HorizontalSlide horizontalSlide, HorizontalWrist horizontalWrist,
                             VerticalGrabber verticalGrabber, VerticalSlide verticalSlide, VerticalTilt verticalTilt, VerticalWrist verticalWrist, Gamepad gamepad1, Gamepad gamepad2){
         this.horizontalIntake = horizontalIntake;
@@ -63,8 +63,8 @@ public class TeleOpAttachment {
             if(loop[0] >= desiredLoopms){
                 if(upInput){
                     spot += 1;
-                    if(spot >= 3){
-                        spot = 3;
+                    if(spot >= 2){
+                        spot = 2;
                     }
                 }
                 if(downInput){
@@ -73,24 +73,25 @@ public class TeleOpAttachment {
                         spot = 0;
                     }
                 } if(spot == 0){
+                    VS = true;
+                    HS = false;
+                    runningActions.clear();
                     runningActions.add(new SequentialAction(
+                            new InstantAction(() -> horizontalWrist.horizontalWristPose(Pose.horizontalWristHover)),
+                            new InstantAction(() -> horizontalSlide.horizontalSlidePose(Pose.horizontalSlideTransfer)),
                             new InstantAction(() -> verticalSlide.verticalSlidePose(Pose.verticalSlideBottom)),
                             new InstantAction(() -> verticalGrabber.verticalGrabberPose(Pose.verticalGrabberOpen)),
                             new InstantAction(() -> verticalWrist.verticalWristPose(Pose.verticalWristTransfer)),
                             new InstantAction(() -> verticalTilt.verticalTiltPose(Pose.verticalTiltTransfer))
                     ));
                 } if(spot == 1){
+                    runningActions.clear();
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> verticalWrist.verticalWristPose(Pose.verticalWristWall)),
-                            new InstantAction(() -> verticalSlide.verticalSlidePose(Pose.verticalSlideBottom)),
-                            new SleepAction(.25),
-                            new InstantAction(() -> verticalTilt.verticalTiltPose(Pose.verticalTiltWall))
+                            new InstantAction(() -> verticalWrist.verticalWristPose(Pose.verticalWristBar)),
+                            new InstantAction(() -> verticalTilt.verticalTiltPose(Pose.verticalTiltBar))
                     ));
                 } if(spot == 2){
-                    runningActions.add(new SequentialAction(
-                            //todo figure out highBar
-                    ));
-                } if(spot == 3){
+                    runningActions.clear();
                     runningActions.add(new SequentialAction(
                             new InstantAction(() -> verticalSlide.verticalSlidePose(Pose.verticalSlideHighBasket)),
                             new InstantAction(() -> verticalWrist.verticalWristPose(Pose.verticalWristBasket)),
@@ -113,7 +114,7 @@ public class TeleOpAttachment {
                 } else {
                     runningActions.add(new SequentialAction(
 //                            new InstantAction(() -> verticalGrabber.verticalGrabberPose(Pose.verticalGrabberClose))
-                            verticalGrabber.verticalGrabberAction(Pose.verticalGrabberClose)
+                            verticalGrabber.verticalGrabberAction(Pose.verticalGrabberCloseHard)
                     ));
                 }
                 time[1] = currTime;
@@ -144,7 +145,8 @@ public class TeleOpAttachment {
                             new InstantAction(() -> verticalTilt.verticalTiltPose(Pose.verticalTiltTransfer)),
                             new InstantAction(() -> horizontalSlide.horizontalSlidePose(Pose.horizontalSlideTransfer)),
                             new SleepAction(Timing.horizontalSlideRetract),
-                            verticalWrist.verticalWristAction(Pose.verticalWristTransfer, Timing.verticalWristTransfer),
+                            verticalWrist.verticalWristAction(Pose.verticalWristTransfer),
+                            new SleepAction(.125),
                             new InstantAction(() -> verticalGrabber.verticalGrabberPose(Pose.verticalGrabberClose))
                     ));
                 }
@@ -160,6 +162,38 @@ public class TeleOpAttachment {
                     new SleepAction(.5),
                     new InstantAction(() -> horizontalIntake.horizontalIntakePose(0))
             ));
+        }
+    }
+    public void verticalHang(boolean input){
+        loop[3] = currTime - time[3];
+        if(input){
+            if(loop[3] >= desiredLoopms){
+                if(!VH) {
+                    spot = 0;
+                    runningActions.clear();
+                    runningActions.add(new SequentialAction(
+                            new InstantAction(() -> verticalSlide.verticalSlidePose(100)),
+                            new InstantAction(() -> verticalWrist.verticalWristPose(Pose.verticalWristHover)),
+                            new InstantAction(() -> verticalTilt.verticalTiltPose(Pose.verticalTiltWall)),
+                            new SleepAction(.125),
+                            new InstantAction(() -> horizontalWrist.horizontalWristPose(Pose.horizontalWristTuck)),
+                            new InstantAction(() -> horizontalSlide.horizontalSlidePose(Pose.horizontalSlideRetract)),
+                            new SleepAction(.75),
+                            new InstantAction(() -> verticalSlide.verticalSlidePose(Pose.verticalSlideBottom)),
+                            new InstantAction(() -> verticalWrist.verticalWristPose(Pose.verticalWristWall)),
+                            new InstantAction(() -> verticalGrabber.verticalGrabberPose(Pose.verticalGrabberOpen))
+                    ));
+                } else {
+                    runningActions.clear();
+                    runningActions.add(new SequentialAction(
+                            new InstantAction(() -> verticalSlide.verticalSlidePose(Pose.verticalSlideBar)),
+                            new SleepAction(.5),
+                            new InstantAction(() -> verticalGrabber.verticalGrabberPose(Pose.verticalGrabberOpen))
+                    ));
+                }
+                time[3] = currTime;
+                VH = !VH;
+            }
         }
     }
     public void updateFunction(){

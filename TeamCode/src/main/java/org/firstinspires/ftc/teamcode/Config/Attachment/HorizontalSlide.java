@@ -19,7 +19,7 @@ public class HorizontalSlide {
         horizontalSlideRight = hardwareMap.get(ServoImplEx.class, Port.HORIZONTAL_SLIDE_RIGHT);
 //        leftSensor = hardwareMap.get(AnalogInput.class, Port.HORIZONTAL_SENSOR_LEFT);
 //        rightSensor = hardwareMap.get(AnalogInput.class, Port.HORIZONTAL_SENSOR_RIGHT);
-        horizontalSlidePose(Pose.horizontalSlideRetract);
+        horizontalSlidePose(Pose.horizontalSlideTransfer);
     }
     private class HorizontalSlideAction implements Action{
         double pose, targetPose, distance;

@@ -66,32 +66,32 @@ public class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
         // drive model parameters
-        public double inPerTick = robotConfig.setConfig(0);
-        public double lateralInPerTick = robotConfig.setConfig(1);
-        public double trackWidthTicks = robotConfig.setConfig(2);
+        public double inPerTick = .001978956002;
+        public double lateralInPerTick = 0.0013599255312925999;
+        public double trackWidthTicks = 7832.412638;
 
         // feedforward parameters (in tick units)
-        public double kS = robotConfig.setConfig(3);
-        public double kV = robotConfig.setConfig(4);
-        public double kA = robotConfig.setConfig(5);
+        public double kS = 1.7440029590047406;
+        public double kV = 0.12786925052892806;
+        public double kA = 0.001;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = robotConfig.setConfig(6);
-        public double minProfileAccel = robotConfig.setConfig(7);
-        public double maxProfileAccel = robotConfig.setConfig(8);
+        public double maxWheelVel = 50;
+        public double minProfileAccel = -30;
+        public double maxProfileAccel = 50;
 
         // turn profile parameters (in radians)
-        public double maxAngVel = robotConfig.setConfig(9);
-        public double maxAngAccel = robotConfig.setConfig(10);
+        public double maxAngVel = Math.PI;
+        public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = robotConfig.setConfig(11);
-        public double lateralGain = robotConfig.setConfig(12);
-        public double headingGain = robotConfig.setConfig(13);
+        public double axialGain = 1;
+        public double lateralGain = 1;
+        public double headingGain = 1;
 
-        public double axialVelGain = robotConfig.setConfig(14);
-        public double lateralVelGain = robotConfig.setConfig(15);
-        public double headingVelGain = robotConfig.setConfig(16);
+        public double axialVelGain = 0.0;
+        public double lateralVelGain = 0.0;
+        public double headingVelGain = 0.0;
     }
 
     public static Params PARAMS = new Params();

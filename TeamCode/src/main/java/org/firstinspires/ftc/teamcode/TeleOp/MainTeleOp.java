@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Config.Attachment.VerticalSlide;
 import org.firstinspires.ftc.teamcode.Config.Attachment.VerticalTilt;
 import org.firstinspires.ftc.teamcode.Config.Attachment.VerticalWrist;
 import org.firstinspires.ftc.teamcode.Config.Pose;
-import org.firstinspires.ftc.teamcode.RR.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
 @TeleOp(name = "MainTeleOp", group = "main")
@@ -44,6 +43,7 @@ public class MainTeleOp extends LinearOpMode {
             attachment.verticalGrabber(gamepad1.right_bumper);
             attachment.horizontalSlide(gamepad1.triangle);
             attachment.horizontalIntake(gamepad1.cross);
+            attachment.verticalHang(gamepad1.circle);
 
             driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_trigger, .6);
 
